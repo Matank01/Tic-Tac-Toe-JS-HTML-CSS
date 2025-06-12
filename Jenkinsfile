@@ -23,7 +23,7 @@ pipeline {
         stage('Clone code') {
             steps {
                 // Pull your repository, da
-                git 'https://github.com/RonyBubnovsky/Tic-Tac-Toe-JS-HTML-CSS.git'
+                git 'https://github.com/Matank01/Tic-Tac-Toe-JS-HTML-CSS.git'
             }
         }
 
