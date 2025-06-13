@@ -1,8 +1,5 @@
-# Start from the official nginx image
 FROM nginx:alpine
 
-# Copy static site files
-COPY . /usr/share/nginx/html
-
-# Expose port 80
-EXPOSE 80
+COPY index.html /usr/share/nginx/html/index.html
+COPY tic-tac-toe.css /usr/share/nginx/html/tic-tac-toe.css
+COPY tic-tac-toe.js /usr/share/nginx/html/tic-tac-toe.js

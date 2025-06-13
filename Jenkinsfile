@@ -1,57 +1,33 @@
 pipeline {
     agent any
-
-    /* ===== ENVIRONMENT CONFIG ===== */
     environment {
-        // IP and port of your Nexus Docker registry, da
-        DOCKER_REGISTRY      = "10.0.0.11:8082"
-
-        // Name of the Docker image to build and push, da
-        IMAGE_NAME           = "my-app"
-
-        // Credential ID in Jenkins for the Nexus user/password, da
-        REGISTRY_CREDENTIALS = "04691a51-2b1c-40a8-9084-891be5df351a"
+        IMAGE_NAME = "10.0.0.11:8082/docker-local/tic-tac-toe"
+        TAG = "${env.BUILD_NUMBER}"
     }
-
-    /* ===== OPTIONS ===== */
-    options {
-        timeout(time: 30, unit: 'MINUTES')
-        timestamps()
-    }
-
     stages {
-        stage('Clone code') {
+        stage('Build Docker Image') {
             steps {
-                // Pull your repository, da
-                git 'https://github.com/Matank01/Tic-Tac-Toe-JS-HTML-CSS.git'
+                bat """
+                docker build -t %IMAGE_NAME%:%TAG% .
+                """
             }
         }
-
-        stage('Build Docker image') {
+        stage('Push to Nexus') {
             steps {
                 script {
-                    // Build the Docker image, da
-                    dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}")
-                }
-            }
-        }
-
-        stage('Push to Nexus registry') {
-            steps {
-                script {
-                    docker.withRegistry("http://${DOCKER_REGISTRY}", REGISTRY_CREDENTIALS) {
-                        // Push the version tag and the latest tag, da
-                        dockerImage.push()
-                        dockerImage.push("latest")
+                    docker.withRegistry('http://10.0.0.11:8082', 'nexus-credentials') {
+                        docker.image("${env.IMAGE_NAME}:${env.TAG}").push()
                     }
                 }
             }
         }
-    }
-
-    post {
-        always {
-            cleanWs()
+        stage('Deploy to Minikube') {
+            steps {
+                bat """
+                powershell -Command "(Get-Content k8s-deployment.yaml).replace('IMAGE_TAG_TO_REPLACE', '%TAG%') | Set-Content k8s-deployment.generated.yaml"
+                kubectl apply -f k8s-deployment.generated.yaml
+                """
+            }
         }
     }
 }
