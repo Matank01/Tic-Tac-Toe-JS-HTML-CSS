@@ -14,12 +14,11 @@ spec:
     spec:
       containers:
         - name: tic-tac-container
-          image: 10.0.0.11:8082/docker-local/tic-tac-toe:IMAGE_TAG_TO_REPLACE
+          image: 10.0.0.11:8082/docker-local/tic-tac-toe:12
           ports:
             - containerPort: 80
       imagePullSecrets:
-        - name: nexus-credentials
-
+        - name: nexus-credentials # Added image pull secret here
 ---
 apiVersion: v1
 kind: Service
