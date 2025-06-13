@@ -17,6 +17,9 @@ spec:
           image: 10.0.0.11:8082/docker-local/tic-tac-toe:IMAGE_TAG_TO_REPLACE
           ports:
             - containerPort: 80
+      imagePullSecrets:
+        - name: nexus-secret
+
 ---
 apiVersion: v1
 kind: Service
