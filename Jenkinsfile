@@ -89,7 +89,7 @@ pipeline {
             steps {
                 dir('tmpChart') {
                     /* clone Chart repo בלבד */
-                    git branch: "${CHART_BRANCH}", url: "${CHART_REPO}"
+                    git branch: "${CHART_BRANCH}", url: "${CHART_REPO}",poll: false,changelog: false
 
                     /* עדכון הערך image.tag ל-TAG החדש */
                     bat """
