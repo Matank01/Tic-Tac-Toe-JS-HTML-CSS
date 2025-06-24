@@ -106,7 +106,7 @@ pipeline {
                         git config user.name  "matank"
                         git add ${CHART_PATH}\\values.yaml
                         git commit -m "CI: bump image tag to %TAG%"
-                        git push https://%GIT_USER%:%GIT_PASS%@github.com/Matank01/chart-repo.git HEAD:%CHART_BRANCH%
+                        git push https://%GIT_USER%:%GIT_PASS%@github.com/Matank01/helm-chart.git HEAD:%CHART_BRANCH%
                         """
                     }
                 }
