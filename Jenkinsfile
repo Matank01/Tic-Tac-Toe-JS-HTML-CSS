@@ -95,6 +95,11 @@ pipeline {
                     bat """
                     yq e ".image.tag = \\"%TAG%\\" " -i ${CHART_PATH}\\values.yaml
                     """
+                    /* Lint before committing */
+                    bat """
+                    echo Running Helm lint ...
+                    helm lint ${CHART_PATH}
+                    """                                                                                                 
 
                     /* commit + push חזרה ל-Git */
                     withCredentials([usernamePassword(
