@@ -61,8 +61,6 @@ pipeline {
 
     stages {
 
-        /* 1. Clone app-repo קורה אוטומטית ב-checkout scm */
-
         stage('Build Docker Image') {
             steps {
                 bat """
@@ -88,20 +86,16 @@ pipeline {
         stage('Update Helm values.yaml') {
             steps {
                 dir('tmpChart') {
-                    /* clone Chart repo בלבד */
                     git branch: "${CHART_BRANCH}", url: "${CHART_REPO}",poll: false,changelog: false
 
-                    /* עדכון הערך image.tag ל-TAG החדש */
                     bat """
                     yq e ".image.tag = \\"%TAG%\\" " -i ${CHART_PATH}\\values.yaml
                     """
-                    /* Lint before committing */
                     bat """
                     echo Running Helm lint ...
                     helm lint ${CHART_PATH}
                     """                                                                                                 
 
-                    /* commit + push חזרה ל-Git */
                     withCredentials([usernamePassword(
                             credentialsId: 'git-creds',
                             usernameVariable: 'GIT_USER',
@@ -119,10 +113,9 @@ pipeline {
         }
     }
 
-    post {
-        cleanup {
-            /* מנקה ספרייה זמנית */
-            bat 'rd /s /q tmpChart'
-        }
-    }
+    // post {
+    //     cleanup {
+    //         bat 'rd /s /q tmpChart'
+    //     }
+    // }
 }
