@@ -125,11 +125,11 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY      = "host.docker.internal:5000"          // כתובת Nexus החדשה
-        IMAGE_NAME    = "${REGISTRY}/myapp"                  // שם-repo אחיד
-        TAG           = "${env.BUILD_NUMBER}"                // תיוג ייחודי לכל build
+        REGISTRY      = "host.docker.internal:5000"          
+        IMAGE_NAME    = "${REGISTRY}/myapp"                 
+        TAG           = "${env.BUILD_NUMBER}"                
         CHART_REPO    = "https://github.com/Matank01/helm-chart.git"
-        CHART_PATH    = "myapp"                              // התיקייה שבה יושב Chart
+        CHART_PATH    = "myapp"                              
         CHART_BRANCH  = "main"
     }
 
@@ -186,10 +186,4 @@ pipeline {
             }
         }
     }
-
-    // post {
-    //     cleanup {
-    //         bat 'rd /s /q tmpChart'
-    //     }
-    // }
 }
